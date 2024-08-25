@@ -25,7 +25,6 @@ Hierarchy id    file or directory      parent directory
 #include <string>
 #include <vector>
 #include <map>
-
 using namespace std;
 
 class Node
@@ -65,9 +64,11 @@ public:
 	void AddPathNode(std::string strPath);
 	Node * FindNode(std::string name ,int index);
 	void PrintTree(Node *pRoot);
+	void PrtintTreemmp();
 	Node *pRoot;
 private:
 	int nCountDeep;
+	std::multimap<int, Node*> mmpDate;
 	
 
 };
@@ -75,12 +76,19 @@ private:
 PathTree::PathTree()
 {
 	nCountDeep = 0;
-	pRoot = new Node("NULL" , 0);
+	pRoot = new Node("/" , 0);
 }
 
 PathTree::~PathTree()
 {
 	//删除所有Nodes申请的内存
+	for (std::multimap<int, Node*>::iterator it = mmpDate.begin(); it != mmpDate.end(); it++)
+	{
+		if (it->second)
+		{
+			delete it->second;
+		}
+	}
 }
 
 void PathTree::AddPathNode(std::string strPath)
@@ -115,6 +123,7 @@ void PathTree::AddPathNode(std::string strPath)
 	{
 		std::string name = subPath[i];
 		int deep = i + 1;
+			
 		if (current->mapChildren.find(name) != current->mapChildren.end())
 		{
 			//说明该节点已经存在,需要对下面一层比较
@@ -126,6 +135,7 @@ void PathTree::AddPathNode(std::string strPath)
 			newNode->pPararent = current;
 			current->mapChildren[name] = newNode;
 			current = newNode;
+			mmpDate.insert(make_pair(deep, newNode));
 		}
 			
 	}
@@ -144,25 +154,27 @@ Node * PathTree::FindNode(std::string name, int index)
 void PathTree::PrintTree(Node *pRoot)
 {
 	Node *pCurent = pRoot;
-	if (!pCurent){return;}
-	std::cout <<"********"<< pCurent->nIndex<< "   "<< pCurent->strName << "   ";
-	if (pCurent->pPararent == NULL)
+	if (!pCurent)
 	{
-		std::cout <<"NULL" << "   "<<endl;
+		return;
 	}
-	else
+	for (std::map<std::string, Node*>::iterator it = pCurent->mapChildren.begin(); it != pCurent->mapChildren.end(); it++)
 	{
-		std::cout << pCurent->pPararent->strName << endl;
-	}
-		std::map<std::string, Node*>::iterator it = pCurent->mapChildren.begin();
-		for ( ;it!= pCurent->mapChildren.end();it++)
-		{
-			std::string name = it->second->strName;
-			std::cout << name << "  " << it->second->nIndex << endl;
-			Node *p = it->second->mapChildren[name];
-			PrintTree(p);
+		std::string name = it->second->strName;
+		std::cout << it->second->nIndex << "   " << name << "   " << it->second->pPararent->strName << endl;
+		Node *p = pCurent->mapChildren[it->second->strName];
+		PrintTree(p);
 	}
 }
+
+void PathTree::PrtintTreemmp()
+{
+	for (std::multimap<int , Node*>::iterator it = mmpDate.begin();it != mmpDate.end() ; it++)
+	{
+		std::cout << it->first << "   " << it->second->strName << "   " << it->second->pPararent->strName << endl;
+	}
+}
+
 /*
 class TrieNode {
 public:
@@ -236,8 +248,8 @@ int main() {
 	trie.AddPathNode("/home/z6/src/tech.cpp");
  	trie.AddPathNode("/home/sle/include/tech.h");
  	trie.AddPathNode("/bin/make/makefile");
-// 
  	trie.PrintTree(trie.pRoot);
-
+	trie.PrtintTreemmp();
 	return 0;
 }
+
