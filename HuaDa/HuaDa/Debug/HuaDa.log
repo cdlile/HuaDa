@@ -1,0 +1,5 @@
+﻿  HuaDa.cpp
+c:\users\administrator\documents\visual studio 2015\projects\huada\huada\huada.cpp(114): warning C4018: “<”: 有符号/无符号不匹配
+c:\users\administrator\documents\visual studio 2015\projects\huada\huada\huada.cpp(142): warning C4715: “PathTree::FindNode”: 不是所有的控件路径都返回值
+  HuaDa.vcxproj -> C:\Users\Administrator\Documents\Visual Studio 2015\Projects\HuaDa\Debug\HuaDa.exe
+  HuaDa.vcxproj -> C:\Users\Administrator\Documents\Visual Studio 2015\Projects\HuaDa\Debug\HuaDa.pdb (Full PDB)
